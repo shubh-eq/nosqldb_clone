@@ -88,7 +88,7 @@ public class MyNoSQL {
 
     /**
      * Method of MyNoSQL Class
-     * Finds the Document in the Collection and return it a JSON Object.
+     * Finds the Document of given ObjectID in the Collection and return it a JSON Object.
      * Returns null if file is collection or document is not found.
      * @param   collectionName Name of the Collection (String)
      * @param   _id ObjectID of the Document (String)
@@ -137,16 +137,16 @@ public class MyNoSQL {
         catch (Exception e){
             e.getStackTrace();
         }
-        return "";
+        return "Error: Not Inserted!";
     }
 
     /**
      * Method of MyNoSQL Class
-     * Updates JSON Object into a collection and Returns its True if updated successfully
+     * Updates JSON Object into a collection based on _id and Returns its True if updated successfully
      * @param   collectionName Name of the Collection (String)
      * @param   JSONObject Data to be inserted in JSON Object
      * @param   _id ObjectID of the Document (String)
-     * @return  None
+     * @return  Boolean
      */
     public boolean updateDocument(String collectionName,JSONObject newData,String _id){
         JSONArray prevData = findAll(collectionName);
