@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
+
 
 /**
  * Objects created from MyNoSQL class will represent a Database instance.
@@ -19,6 +21,9 @@ public class MyNoSQL {
     private String dbName;
 
     private ArrayList<String> collectionsList;
+
+    //Used to maintain ObjectIDs of Documents
+    private static long currentObjectNumber = 0;
 
     /**
      * Parameterized Constructor that takes database name and stores it.
@@ -48,7 +53,7 @@ public class MyNoSQL {
      * @param   collectionName Name of the Collection (String)
      * @return  boolean
      */
-    public boolean createCollections(String collectionName){
+    public boolean createCollection(String collectionName){
         File file = new File(collectionName+".json");
 
         try {
@@ -64,16 +69,45 @@ public class MyNoSQL {
         return false;
     }
 
+    /**
+     * Method of MyNoSQL Class
+     * Finds All the Document in the Collection and return it a JSON Array.
+     * Returns null if file is collection or document is not found.
+     * @param   collectionName Name of the Collection (String)
+     * @return  JSONArray
+     */
+    public JSONArray findAll(String collectionName){
+        try (FileReader reader = new FileReader(collectionName+".json")) {
+            JSONTokener data = new JSONTokener(reader);
+
+            JSONArray js = new JSONArray(data);
+            return js;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
     /**
      * Method of MyNoSQL Class
      * Finds the Document in the Collection and return it a JSON Object.
+     * Returns null if file is collection or document is not found.
      * @param   collectionName Name of the Collection (String)
      * @param   _id ObjectID of the Document (String)
      * @return  JSONObject
      */
     public JSONObject findOne(String collectionName, String _id){
+        JSONArray prevData = findAll(collectionName);
+        if(prevData!=null){
+            for (int i = 0; i < prevData.length(); i++) {
+                JSONObject tempObj = prevData.getJSONObject(i);
 
+                if(tempObj.get("_id").equals(_id)){
+                    return tempObj;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -84,7 +118,28 @@ public class MyNoSQL {
      * @return  String
      */
     public String insertDocument(String collectionName,JSONObject data){
+        try{
+            JSONArray prevData = findAll(collectionName);
+            FileWriter Writer = new FileWriter(collectionName+".json");
 
+            if(prevData==null){
+                prevData = new JSONArray();
+            }
+
+            //Adding ObjectID
+            currentObjectNumber++;
+            String ObjectID = Long.toString(currentObjectNumber);
+            data.put("_id",ObjectID);
+            prevData.put((data));
+            Writer.write(prevData.toString());
+            Writer.close();
+
+            return ObjectID;
+        }
+        catch (Exception e){
+            e.getStackTrace();
+        }
+        return "";
     }
 
     /**
@@ -95,7 +150,7 @@ public class MyNoSQL {
      * @return  String
      */
     public String updateDocument(String collectionName,JSONObject newData){
-
+        return "";
     }
 
     /**
@@ -107,7 +162,7 @@ public class MyNoSQL {
      */
     public boolean dropCollection(String collectionName){
         try{
-            File file = new File(collectionName);
+            File file = new File(collectionName+".json");
             boolean value = file.delete();
             return value;
         }
