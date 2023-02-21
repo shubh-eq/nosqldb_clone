@@ -36,7 +36,10 @@ public class MyNoSQL {
      * @return  None
      */
     public void showAllCollections(){
-
+        System.out.println("Displaying All Collections:");
+        for (String collection: collectionsList) {
+            System.out.println(collection);
+        }
     }
 
     /**
@@ -91,6 +94,14 @@ public class MyNoSQL {
      * @return  Boolean
      */
     public boolean dropCollection(String collectionName){
-
+        try{
+            File file = new File(collectionName);
+            boolean value = file.delete();
+            return value;
+        }
+        catch (Exception e){
+            e.getStackTrace();
+        }
+        return false;
     }
 }
