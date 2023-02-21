@@ -46,7 +46,7 @@ public class Main {
         db.updateDocument("person",jsObj3,"1");
 
         //Getting Data based on ID
-        System.out.println(db.findOne("person","2"));
+        System.out.println(db.findOne("person","1"));
 
         //Dropping Collection
         db.dropCollection("school");

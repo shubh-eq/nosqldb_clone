@@ -156,6 +156,8 @@ public class MyNoSQL {
 
                 if(tempObj.get("_id").equals(_id)){
                     prevData.remove(i);
+
+                    newData.put("_id",_id);
                     prevData.put(newData);
 
                     try {
