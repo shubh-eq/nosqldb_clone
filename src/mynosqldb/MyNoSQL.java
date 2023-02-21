@@ -49,7 +49,19 @@ public class MyNoSQL {
      * @return  boolean
      */
     public boolean createCollections(String collectionName){
+        File file = new File(collectionName+".json");
 
+        try {
+            boolean value = file.createNewFile();
+            if (value) {
+                collectionsList.add(collectionName);
+                return true;
+            }
+        }
+        catch(Exception e) {
+            e.getStackTrace();
+        }
+        return false;
     }
 
 
