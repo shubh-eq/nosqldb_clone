@@ -37,8 +37,16 @@ public class Main {
             }
         }
 
+        //Updating Data
+
+        //Creating JSON Object 3
+        JSONObject jsObj3 = new JSONObject();
+        jsObj3.put("hello", "world");
+
+        db.updateDocument("person",jsObj3,"1");
+
         //Getting Data based on ID
-        System.out.println(db.findOne("person","1"));
+        System.out.println(db.findOne("person","2"));
 
         //Dropping Collection
         db.dropCollection("school");

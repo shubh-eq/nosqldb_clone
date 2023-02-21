@@ -7,9 +7,7 @@ import org.json.JSONTokener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
 
 /**
@@ -144,13 +142,37 @@ public class MyNoSQL {
 
     /**
      * Method of MyNoSQL Class
-     * Updates JSON Object into a collection and Returns its ObjectID
+     * Updates JSON Object into a collection and Returns its True if updated successfully
      * @param   collectionName Name of the Collection (String)
      * @param   JSONObject Data to be inserted in JSON Object
-     * @return  String
+     * @param   _id ObjectID of the Document (String)
+     * @return  None
      */
-    public String updateDocument(String collectionName,JSONObject newData){
-        return "";
+    public boolean updateDocument(String collectionName,JSONObject newData,String _id){
+        JSONArray prevData = findAll(collectionName);
+        if(prevData!=null){
+            for (int i = 0; i < prevData.length(); i++) {
+                JSONObject tempObj = prevData.getJSONObject(i);
+
+                if(tempObj.get("_id").equals(_id)){
+                    prevData.remove(i);
+                    prevData.put(newData);
+
+                    try {
+                        FileWriter Writer = new FileWriter(collectionName+".json");
+
+                        Writer.write(prevData.toString());
+                        Writer.close();
+                    }
+                    catch (Exception e){
+                        e.getStackTrace();
+                    }
+
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     /**
